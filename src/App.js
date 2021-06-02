@@ -1,16 +1,14 @@
 import './App.css';
 import Border from './Border';
-import { useState } from 'react';
 
 function App() {
-  const [score, setScore] = useState(0);
   return (
     <div className="app">
       <center>
         <h2>Snake Game</h2>
-        <p>Score: {score}</p>
+        <p className="score">Score: 0</p>
       </center>
-      <Border score={score} updateScore={setScore} />
+      <Border/>
     </div>
   );
 }

@@ -2,10 +2,10 @@ import './App.css';
 import Snake from './Snake';
 
 
-function Border({ score, updateScore }){
+function Border(){
     return(
     <div className="border" id="border">
-        <Snake score={score} updateScore={updateScore}/>
+        <Snake/>
     </div>
     )
 }

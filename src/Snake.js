@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 class _Snake {
     constructor(board) {
-        this.speed = 1;
+        this.speed = 3;
         this.score = 0;
         this.snakeBody = [
             {
@@ -25,31 +25,73 @@ class _Snake {
         ];
         this.indexOfApple = [];
         this.board = board;
-        this.clickLog = ['d'];
+        this.direction = { x: 0, y: 0 };
+        this.expantionRate = 1;
     }
 
     spawnApple() {
-        const element = document.createElement("div");
+        if (this.indexOfApple.length === 2) {
+            for (const apple of this.indexOfApple) {
+                const element = document.createElement("div");
 
-        element.classList.add("apple");
+                element.classList.add("apple");
 
-        element.style.gridRowStart = Math.floor(Math.random() * 20);
-        element.style.gridColumnStart = Math.floor(Math.random() * 20);
+                element.style.gridRowStart = apple.x;
+                element.style.gridColumnStart = apple.y;
 
-        if (element.classList.contains("body") || element.classList.contains("head")) return this.spawnApple();
-        this.indexOfApple.push({ x: element.style.gridRowStart, y: element.style.gridColumnStart });
-        this.board.appendChild(element);
-    }
-
-    moveRight() {
-        for (let i = 0; i < this.snakeBody.length; i++) {
-            this.snakeBody[i].y++;
+                this.board.appendChild(element);
+            }
+        } else {
+            this.indexOfApple.push({ x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20) });
         }
     }
 
-    update() {
-        if (this.indexOfApple.length < 2) this.spawnApple();
-        if (this.clickLog[0] === 'd') this.moveRight();
+
+    handleApple() {
+        for (const apple of this.indexOfApple) {
+            if (this.snakeBody[0].x === apple.y && this.snakeBody[0].y === apple.x) {
+                this.indexOfApple.splice(this.indexOfApple.indexOf(apple), 1);
+                this.score += 1;
+                this.indexOfApple.push({ x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20) });
+            }
+        }
+    }
+
+    move() {
+        for (let i = this.snakeBody.length - 2; i >= 0; i--) {
+            this.snakeBody[i + 1] = { ...this.snakeBody[i] };
+        }
+
+        this.snakeBody[0].x += this.direction.x;
+        this.snakeBody[0].y += this.direction.y;
+
+    }
+
+    handleClick(e) {
+        switch (e.key.toLowerCase()) {
+            default:
+                return;
+
+            case "w":
+                if (this.direction.y === 1) return;
+                this.direction = { x: 0, y: -1 };
+                break;
+
+            case "d":
+                if (this.direction.x === -1) return;
+                this.direction = { x: 1, y: 0 };
+                break;
+
+            case "a":
+                if (this.direction.x === 1) return;
+                this.direction = { x: -1, y: 0 };
+                break;
+
+            case "s":
+                if (this.direction.y === -1) return;
+                this.direction = { x: 0, y: 1 };
+                break;
+        }
     }
 
     draw() {
@@ -57,29 +99,27 @@ class _Snake {
         for (let i = 0; i < this.snakeBody.length; i++) {
             const element = document.createElement("div");
 
-            /*    if (i === this.snakeBody.length - 1) {
-                   const lastSnakeBody = document.querySelector(`div grid-row-start=${this.snakeBody[i].x}`);
-   
-                   console.log(lastSnakeBody);
-               }
-    */
             if (i === 0) element.classList.add("head");
             else element.classList.add("body");
 
-            element.style.gridRowStart = this.snakeBody[i].x;
-            element.style.gridColumnStart = this.snakeBody[i].y;
+            element.style.gridRowStart = this.snakeBody[i].y;
+            element.style.gridColumnStart = this.snakeBody[i].x;
             this.board.appendChild(element);
 
         }
     }
 }
 
-function Snake({ score, updateScore }) {
+function Snake() {
     useEffect(() => {
         const border = document.getElementById("border");
 
         const SNAKE = new _Snake(border);
         let lastRenderTime = 0;
+
+        window.addEventListener("keydown", function (e) {
+            SNAKE.handleClick(e);
+        });
 
         function main(currentTime) {
             window.requestAnimationFrame(main);
@@ -89,9 +129,11 @@ function Snake({ score, updateScore }) {
 
             lastRenderTime = currentTime;
 
-            SNAKE.update();
+            SNAKE.move();
             SNAKE.draw();
-
+            SNAKE.spawnApple();
+            SNAKE.handleApple();
+            document.querySelector(".score").textContent = `Score: ${SNAKE.score}`
         }
 
         window.requestAnimationFrame(main);
