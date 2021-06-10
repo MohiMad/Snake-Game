@@ -2,11 +2,13 @@ import './App.css';
 import Snake from './Snake';
 
 
-function Border(){
-    return(
-    <div className="border" id="border">
-        <Snake/>
-    </div>
+function Border() {
+    return (
+    
+            <div className="border" id="border">
+                <Snake />
+            </div>
+    
     )
 }
 

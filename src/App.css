@@ -1,5 +1,6 @@
 * {
   margin: 0;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 body {
@@ -9,6 +10,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 40px;
+  overflow:hidden;
+}
+
+.score {
+  font-size: 25px;
+
 }
 
 .border {
@@ -40,4 +48,44 @@ body {
   border: solid 1px black;
   background-color: #4e0909;
   background: #4e0909;
+}
+
+#instructions {
+  position: absolute;
+  text-align: center;
+  width: 100vw;
+  transform: translateX(-32%);
+  background-color: rgba(0, 0, 0, 0.527);
+  top: 50%;
+  color: #fff;
+  
+}
+
+a {
+  padding: 3px 8px 3px 8px;
+  font-weight: bold;
+  background-color: #787978;
+  border-radius: 5%;
+  font-size: 35px;
+  font-family: Arial, Helvetica, sans-serif;
+  filter: drop-shadow(5px 5px 3px #000000)
+
+}
+
+#playagain {
+  background-color: #44a344;
+  border-radius: 10%;
+  border: none;
+  cursor: pointer;
+  margin-top: 10%;
+  font-size: 20px;
+  transition: ease-in .5s;
+  font-weight:bold; 
+  padding: 20px;
+}
+
+#playagain:hover{
+  background-color: #38e038;
+  transform: translateY(5%);
+
 }
