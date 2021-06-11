@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 class _Snake {
     constructor(board) {
-        this.speed = 3;
+        this.speed = 5;
         this.score = 0;
         this.snakeBody = [
             {
@@ -50,7 +50,10 @@ class _Snake {
     }
 
     givePositiveCoordinates() {
-        const coordinates = { x: [...Array(21).keys()].slice(1)[Math.floor(Math.random() * 20)], y: [...Array(21).keys()].slice(1)[Math.floor(Math.random() * 20)] }
+        const coordinates = {
+            x: [...Array(21).keys()].slice(1)[Math.floor(Math.random() * 20)],
+            y: [...Array(21).keys()].slice(1)[Math.floor(Math.random() * 20)]
+        }
 
         for (const element of this.snakeBody) {
             if (coordinates.x === element.x && coordinates.y === element.y) return this.givePositiveCoordinates();
@@ -68,7 +71,7 @@ class _Snake {
             if (this.snakeBody[0].x === apple.y && this.snakeBody[0].y === apple.x) {
                 this.indexOfApple.splice(this.indexOfApple.indexOf(apple), 1);
                 this.score += 1;
-                this.speed += .5;
+               (this.speed === 10) ? this.speed = 10 : this.speed += .5;
                 this.snakeBody = [...this.snakeBody, { x: this.snakeBody[this.snakeBody.length - 1].x + 1, y: this.snakeBody[this.snakeBody.length - 1].y + 1 }]
 
                 const coord = this.givePositiveCoordinates();
@@ -114,6 +117,7 @@ class _Snake {
                 return;
 
             case "w":
+            case "arrowup":
                 if (this.direction.y === 1) return;
 
                 this.direction = { x: 0, y: -1 };
@@ -121,6 +125,8 @@ class _Snake {
                 break;
 
             case "d":
+            case "arrowright":
+
                 if (this.direction.x === -1) return;
                 this.direction = { x: 1, y: 0 };
                 this.totalMoves += 1;
@@ -128,12 +134,14 @@ class _Snake {
                 break;
 
             case "a":
+            case "arrowleft":
                 if (this.direction.x === 1) return;
                 this.direction = { x: -1, y: 0 };
                 this.totalMoves += 1;
                 break;
 
             case "s":
+            case "arrowdown":
                 if (this.direction.y === -1) return;
                 this.direction = { x: 0, y: 1 };
                 this.totalMoves += 1;
@@ -193,7 +201,7 @@ function Snake() {
         }
 
         window.addEventListener("keydown", function (e) {
-            if (!["w", "a", "s", "d"].includes(e.key)) return;
+            if (!["w", "a", "s", "d", "ArrowUp", "ArrowDown", "ArrowRight", "ArrowLeft"].includes(e.key)) return;
             document.getElementById("instructions").style.display = "none";
             SNAKE.handleClick(e);
             window.requestAnimationFrame(main);
